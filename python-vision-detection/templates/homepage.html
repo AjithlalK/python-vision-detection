@@ -22,6 +22,13 @@
 <div class="foot-wrapper">
   <p class="footer">Developed By Ajithlal</p>
 </div>
+
+{% for image_entity in image_entities %}
+      <img src="{{image_entity['image_public_url']}}" width=200 height=200>
+      <p>{{image_entity['blob_name']}} was uploaded {{image_entity['timestamp']}}.</p>
+      <p>Joy Likelihood for Face: {{image_entity['joy']}}</p>
+    {% endfor %}
+	
   <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
 <script src='http://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js'></script>
 
