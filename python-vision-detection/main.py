@@ -32,33 +32,41 @@ app = Flask(__name__)
 
 @app.route('/')
 def homepage():
-   
-    return render_template('homepage.html')
+   return render_template('homepage.html')
 	
+
 	
 @app.route('/textdetection.html')
 def textpage():
    return render_template('textdetection.html')	
+
+
+
    
 @app.route('/facedetection.html')
-def textpage():
+def facepage():
 	
-	# Create a Cloud Datastore client.
+	 # Create a Cloud Datastore client.
     datastore_client = datastore.Client()
 
     # Use the Cloud Datastore client to fetch information from Datastore about
     # each photo.
     query = datastore_client.query(kind='Faces')
     image_entities = list(query.fetch())
-	return render_template('facedetection.html', image_entities=image_entities)   
-   
+
+    # Return a Jinja2 HTML template and pass in image_entities as a parameter.
+    return render_template('facedetection.html', image_entities=image_entities)
+ 
+
+
+ 
 @app.route('/landdetection.html')
-def textpage():
+def landpage():
    return render_template('landdetection.html')    
 
 
 @app.route('/upload_photo_face', methods=['GET', 'POST'])
-def upload_photo():
+def upload_photo_face():
     photo = request.files['file']
 
     # Create a Cloud Storage client.
