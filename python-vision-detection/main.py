@@ -50,7 +50,7 @@ def textpage():
     # each photo.
     query = datastore_client.query(kind='Faces')
     image_entities = list(query.fetch())
-	return render_template('facedetection.html',, image_entities=image_entities)   
+	return render_template('facedetection.html', image_entities=image_entities)   
    
 @app.route('/landdetection.html')
 def textpage():
