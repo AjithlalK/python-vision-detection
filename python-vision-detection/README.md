@@ -3,7 +3,7 @@
 This  application allows a user to  perform text detection, landmark detection, and face detection 
 using Google Cloud Vision API.
 
-#It detects
+## It detects
 
 	1. How likely it is that the person is happy from photo of a person's face
 	2. Extracts text within an image
