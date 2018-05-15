@@ -1,5 +1,3 @@
-# Copyright 2017 Google Inc. All Rights Reserved.
-#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -63,7 +61,8 @@ def facepage():
     # Use the Cloud Datastore client to fetch information from Datastore about
     # each photo.
     query = datastore_client.query(kind='Faces')
-    image_entities = list(query.fetch())
+    query.order = ['-created']
+	image_entities = list(query.fetch(limit=1))
 
     # Return a Jinja2 HTML template and pass in image_entities as a parameter.
     return render_template('facedetection.html', image_entities=image_entities)

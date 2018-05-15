@@ -9,7 +9,7 @@ using Google Cloud Vision API.
 	2. Extracts text within an image
 	3. Popular natural and man-made structures within an image
 
-Python Flask web framework with  jinja2 templates and google cloud data store(NoSQL document database) is used in this application.
+Python Flask web framework with  jinja2 HTML templates and google cloud data store(NoSQL document database) is used in this application.
 
 ## Setup
 
