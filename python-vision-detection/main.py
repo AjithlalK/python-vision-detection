@@ -73,7 +73,19 @@ def facepage():
  
 @app.route('/landdetection.html')
 def landpage():
-   return render_template('landdetection.html')    
+	
+    # Create a Cloud Datastore client.
+    datastore_client = datastore.Client()
+
+    # Use the Cloud Datastore client to fetch information from Datastore about
+    # each photo.
+    query = datastore_client.query(kind='Lands')
+	query.order = ['-created']
+	land_entities = list(query.fetch(limit=1))
+
+    # Return a Jinja2 HTML template and pass in image_entities as a parameter.
+    return render_template('landdetection.html', land_entities=land_entities)
+   
 
 
 @app.route('/upload_photo_face', methods=['GET', 'POST'])
@@ -175,9 +187,9 @@ def upload_photo_text():
     image = vision.types.Image(
         source=vision.types.ImageSource(gcs_image_uri=source_uri))
     texts = vision_client.text_detection(image=image)
-	print texts
-	#print('\n'.join([d.description for d in texts.text_annotations]))
-	text=texts
+	
+	
+	text='\n'.join([d.description for d in texts.text_annotations])
     
 
     # Create a Cloud Datastore client.
@@ -208,6 +220,76 @@ def upload_photo_text():
 
     # Redirect to the text detection page
     return redirect('/textdetection.html')	
+	
+	
+	
+	
+	
+@app.route('/upload_photo_land', methods=['GET', 'POST'])
+def upload_photo_land():
+    photo = request.files['file']
+
+    # Create a Cloud Storage client.
+    storage_client = storage.Client()
+
+    # Get the bucket that the file will be uploaded to.
+    bucket = storage_client.get_bucket(CLOUD_STORAGE_BUCKET)
+
+    # Create a new blob and upload the file's content.
+    blob = bucket.blob(photo.filename)
+    blob.upload_from_string(
+            photo.read(), content_type=photo.content_type)
+
+    # Make the blob publicly viewable.
+    blob.make_public()
+
+    # Create a Cloud Vision client.
+    vision_client = vision.ImageAnnotatorClient()
+
+    # Use the Cloud Vision client to detect a face for our image.
+    source_uri = 'gs://{}/{}'.format(CLOUD_STORAGE_BUCKET, blob.name)
+    image = vision.types.Image(
+        source=vision.types.ImageSource(gcs_image_uri=source_uri))
+    lands = vision_client.landmark_detection(image=image)
+	for l in lands.landmark_annotations :
+    description=l.description
+	score=l.score
+	
+	# Create a Cloud Datastore client.
+    datastore_client = datastore.Client()
+
+    # Fetch the current date / time.
+    current_datetime = datetime.now()
+
+    # The kind for the new entity.
+    kind = 'Lands'
+
+    # The name/ID for the new entity.
+    name = blob.name
+
+    # Create the Cloud Datastore key for the new entity.
+    key = datastore_client.key(kind, name)
+
+    # Construct the new entity using the key. Set dictionary values for entity
+    # keys blob_name, storage_public_url, timestamp, and joy.
+    entity = datastore.Entity(key)
+    entity['blob_name'] = blob.name
+    entity['image_public_url'] = blob.public_url
+    entity['timestamp'] = current_datetime
+    entity['description'] = description
+	entity['score'] = score
+	#entity['location'] = location
+
+    # Save the new entity to Datastore.
+    datastore_client.put(entity)
+
+    # Redirect to the text detection page
+    return redirect('/landdetection.html')		
+	
+	
+	
+	
+	
 	
 @app.errorhandler(500)
 def server_error(e):
