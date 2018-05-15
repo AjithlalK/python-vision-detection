@@ -38,7 +38,18 @@ def homepage():
 	
 @app.route('/textdetection.html')
 def textpage():
-   return render_template('textdetection.html')	
+	
+	 # Create a Cloud Datastore client.
+    datastore_client = datastore.Client()
+
+    # Use the Cloud Datastore client to fetch information from Datastore about
+    # each photo.
+    query = datastore_client.query(kind='Texts')
+    text_entities = list(query.fetch())
+
+    # Return a Jinja2 HTML template and pass in text_entities as a parameter.
+    return render_template('textdetection.html', text_entities=text_entities)
+   
 
 
 
@@ -135,6 +146,68 @@ def upload_photo_face():
     return redirect('/facedetection.html')
 
 
+	
+	
+	
+@app.route('/upload_photo_text', methods=['GET', 'POST'])
+def upload_photo_text():
+    photo = request.files['file']
+
+    # Create a Cloud Storage client.
+    storage_client = storage.Client()
+
+    # Get the bucket that the file will be uploaded to.
+    bucket = storage_client.get_bucket(CLOUD_STORAGE_BUCKET)
+
+    # Create a new blob and upload the file's content.
+    blob = bucket.blob(photo.filename)
+    blob.upload_from_string(
+            photo.read(), content_type=photo.content_type)
+
+    # Make the blob publicly viewable.
+    blob.make_public()
+
+    # Create a Cloud Vision client.
+    vision_client = vision.ImageAnnotatorClient()
+
+    # Use the Cloud Vision client to detect a face for our image.
+    source_uri = 'gs://{}/{}'.format(CLOUD_STORAGE_BUCKET, blob.name)
+    image = vision.types.Image(
+        source=vision.types.ImageSource(gcs_image_uri=source_uri))
+    texts = client.text_detection(image=image)
+	print('\n'.join([d.description for d in texts.text_annotations]))
+	text=d.description
+    
+
+    # Create a Cloud Datastore client.
+    datastore_client = datastore.Client()
+
+    # Fetch the current date / time.
+    current_datetime = datetime.now()
+
+    # The kind for the new entity.
+    kind = 'Texts'
+
+    # The name/ID for the new entity.
+    name = blob.name
+
+    # Create the Cloud Datastore key for the new entity.
+    key = datastore_client.key(kind, name)
+
+    # Construct the new entity using the key. Set dictionary values for entity
+    # keys blob_name, storage_public_url, timestamp, and joy.
+    entity = datastore.Entity(key)
+    entity['blob_name'] = blob.name
+    entity['image_public_url'] = blob.public_url
+    entity['timestamp'] = current_datetime
+    entity['text'] = text
+
+    # Save the new entity to Datastore.
+    datastore_client.put(entity)
+
+    # Redirect to the text detection page
+    return redirect('/textdetection.html')	
+	
 @app.errorhandler(500)
 def server_error(e):
     logging.exception('An error occurred during a request.')
