@@ -1,4 +1,4 @@
-# Python  Vision Detection App for detecting Text/Face/Land using Google Cloud Vision API deployed in Google App Engine
+# Python  Vision Detection App for detecting Text/Face/Landmark using Google Cloud Vision API deployed in Google App Engine
 
 This  application allows a user to  perform text detection, landmark detection, and face detection 
 using Google Cloud Vision API.
@@ -9,7 +9,7 @@ using Google Cloud Vision API.
 	2. Extracts text within an image
 	3. Popular natural and man-made structures within an image
 
-Python Flask web framework and google cloud data store(NoSQL document database) is used in this application.
+Python Flask web framework with  jinja2 templates and google cloud data store(NoSQL document database) is used in this application.
 
 ## Setup
 

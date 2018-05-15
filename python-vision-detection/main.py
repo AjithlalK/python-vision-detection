@@ -174,10 +174,10 @@ def upload_photo_text():
     source_uri = 'gs://{}/{}'.format(CLOUD_STORAGE_BUCKET, blob.name)
     image = vision.types.Image(
         source=vision.types.ImageSource(gcs_image_uri=source_uri))
-    texts = client.text_detection(image=image)
+    texts = vision_client.text_detection(image=image)
 	print texts
 	#print('\n'.join([d.description for d in texts.text_annotations]))
-	text="Ajith"
+	text=texts
     
 
     # Create a Cloud Datastore client.
