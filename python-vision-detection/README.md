@@ -1,12 +1,16 @@
-# Python Google Cloud Vision App for Google App Engine Flexible Environment
+# Python  Vision Detection App for detecting Text/Face/Land using Google App Engine
 
+This  application allows a user to  perform text detection, landmark detection, and face detection 
+using Google Cloud Vision API.
+
+It detects
+	. How likely it is that the person is happy from photo of a person's face
+	. Extracts text within an image
+	. Popular natural and man-made structures within an image
+
+Python Flask web framework and google cloud data store(NoSQL document database) is used in this application.
 
 ## Setup
-
-
-Initialize the Google Cloud SDK (skip if using Cloud Shell):
-
-    gcloud init
 
 Create your App Engine application:
 
@@ -21,11 +25,11 @@ with your project ID:
 
 Run the following command to clone the Github repository:
 
-    git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
+    git clone https://github.com/AjithlalK/python-vision-detection.git
 
 Change directory to the sample code location:
 
-    cd python-docs-samples/codelabs/flex_and_vision
+    cd python-vision-detection/python-vision-detection
 
 ## Authentication
 
@@ -38,7 +42,7 @@ Enable the APIs:
 Create a Service Account to access the Google Cloud APIs when testing locally:
 
     gcloud iam service-accounts create hackathon \
-    --display-name "My Hackathon Service Account"
+    --display-name "Codelab Service Account"
 
 Give your newly created Service Account appropriate permissions:
 
@@ -49,7 +53,7 @@ Give your newly created Service Account appropriate permissions:
 After creating your Service Account, create a Service Account key:
 
     gcloud iam service-accounts keys create ~/key.json --iam-account \
-    hackathon@${PROJECT_ID}.iam.gserviceaccount.com
+    codelab@${PROJECT_ID}.iam.gserviceaccount.com
 
 Set the `GOOGLE_APPLICATION_CREDENTIALS` environment variable to point to where
 you just put your Service Account key:
@@ -99,52 +103,3 @@ Visit `https://[YOUR_PROJECT_ID].appspot.com` to view your deployed application.
 
 
 
-
-
--------------------------------------------------------------------
-
-
-
-gcloud services enable vision.googleapis.com
-gcloud services enable storage-component.googleapis.com
-gcloud services enable datastore.googleapis.com
-
-export PROJECT_ID=pythonvisiondetectionapp
-
-gcloud iam service-accounts create codelab \
-  --display-name "My Codelab Service Account"
-  
-gcloud projects add-iam-policy-binding ${PROJECT_ID} \
---member serviceAccount:codelab@${PROJECT_ID}.iam.gserviceaccount.com \
---role roles/owner
-
-gcloud iam service-accounts keys create ~/key.json \
---iam-account codelab@${PROJECT_ID}.iam.gserviceaccount.com
-
-export GOOGLE_APPLICATION_CREDENTIALS="/home/${USER}/key.json"
-
-virtualenv -p python3 env
-
-source env/bin/activate
-
-pip install -r requirements.txt
-
-gcloud app create
-
-
-export CLOUD_STORAGE_BUCKET=${PROJECT_ID}
-
-gsutil mb gs://${PROJECT_ID}
-
-gsutil mb gs://${PROJECT_ID}
-
-
-gcloud app deploy
-
-
-Deploy your Hello World server to the production App Engine environment:
-
-$ gcloud app deploy app.yaml
-After the application is deployed, you can visit it by opening the URL http://<project-id>.appspot.com in your web browser.
-
-The full URL for your application is http://_your-app-id_.appspot.com/. Optionally, you can instead purchase and use a 
