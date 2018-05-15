@@ -1,22 +1,8 @@
-# Python Google Cloud Vision sample for Google App Engine Flexible Environment
+# Python Google Cloud Vision App for Google App Engine Flexible Environment
 
-[![Open in Cloud Shell][shell_img]][shell_link]
-
-[shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
-[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=codelabs/flex_and_vision/README.md
-
-This sample demonstrates how to use the [Google Cloud Vision API](https://cloud.google.com/vision/), [Google Cloud Storage](https://cloud.google.com/storage/), and [Google Cloud Datastore](https://cloud.google.com/datastore/) on [Google App Engine Flexible Environment](https://cloud.google.com/appengine).
 
 ## Setup
 
-Create a new project with the [Google Cloud Platform console](https://console.cloud.google.com/).
-Make a note of your project ID, which may be different than your project name.
-
-Make sure to [Enable Billing](https://pantheon.corp.google.com/billing?debugUI=DEVELOPERS)
-for your project.
-
-Download the [Google Cloud SDK](https://cloud.google.com/sdk/docs/) to your
-local machine. Alternatively, you could use the [Cloud Shell](https://cloud.google.com/shell/docs/quickstart), which comes with the Google Cloud SDK pre-installed.
 
 Initialize the Google Cloud SDK (skip if using Cloud Shell):
 
@@ -109,3 +95,56 @@ take several minutes.
     gcloud app deploy
 
 Visit `https://[YOUR_PROJECT_ID].appspot.com` to view your deployed application.
+
+
+
+
+
+
+-------------------------------------------------------------------
+
+
+
+gcloud services enable vision.googleapis.com
+gcloud services enable storage-component.googleapis.com
+gcloud services enable datastore.googleapis.com
+
+export PROJECT_ID=pythonvisiondetectionapp
+
+gcloud iam service-accounts create codelab \
+  --display-name "My Codelab Service Account"
+  
+gcloud projects add-iam-policy-binding ${PROJECT_ID} \
+--member serviceAccount:codelab@${PROJECT_ID}.iam.gserviceaccount.com \
+--role roles/owner
+
+gcloud iam service-accounts keys create ~/key.json \
+--iam-account codelab@${PROJECT_ID}.iam.gserviceaccount.com
+
+export GOOGLE_APPLICATION_CREDENTIALS="/home/${USER}/key.json"
+
+virtualenv -p python3 env
+
+source env/bin/activate
+
+pip install -r requirements.txt
+
+gcloud app create
+
+
+export CLOUD_STORAGE_BUCKET=${PROJECT_ID}
+
+gsutil mb gs://${PROJECT_ID}
+
+gsutil mb gs://${PROJECT_ID}
+
+
+gcloud app deploy
+
+
+Deploy your Hello World server to the production App Engine environment:
+
+$ gcloud app deploy app.yaml
+After the application is deployed, you can visit it by opening the URL http://<project-id>.appspot.com in your web browser.
+
+The full URL for your application is http://_your-app-id_.appspot.com/. Optionally, you can instead purchase and use a 
