@@ -19,3 +19,27 @@ body {
   background-color: #CCCCFF;
 }
 /* [END example] */
+
+.btn {
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.btn1{
+    background-color: #4CAF50; /* Green */
+ }
+ 
+ .btn2{
+    background-color: #4CAF50; /* Green */
+ }
+ 
+ .btn3{
+    background-color: #4CAF50; /* Green */
+ }
+ 
+
