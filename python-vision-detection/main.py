@@ -61,7 +61,7 @@ def facepage():
     # Use the Cloud Datastore client to fetch information from Datastore about
     # each photo.
     query = datastore_client.query(kind='Faces')
-    # query.order = ['-created']
+    query.order = ['timestamp']
     image_entities = list(query.fetch(limit=1))
 
     # Return a Jinja2 HTML template and pass in image_entities as a parameter.
@@ -79,7 +79,7 @@ def landpage():
     # Use the Cloud Datastore client to fetch information from Datastore about
     # each photo.
     query = datastore_client.query(kind='Lands')
-    query.order = ['-created']
+    # query.order = ['-created']
     land_entities = list(query.fetch(limit=1))
 
     # Return a Jinja2 HTML template and pass in image_entities as a parameter.
@@ -249,7 +249,7 @@ def upload_photo_land():
         source=vision.types.ImageSource(gcs_image_uri=source_uri))
     lands = vision_client.landmark_detection(image=image)
     for l in lands.landmark_annotations:
-        description=l.description
+        land_description=l.description
         score=l.score
 	
 	# Create a Cloud Datastore client.
@@ -273,7 +273,7 @@ def upload_photo_land():
     entity['blob_name'] = blob.name
     entity['image_public_url'] = blob.public_url
     entity['timestamp'] = current_datetime
-    entity['description'] = description
+    entity['description'] = land_description
     entity['score'] = score
 	#entity['location'] = location
 
