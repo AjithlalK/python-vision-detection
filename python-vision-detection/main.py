@@ -61,8 +61,8 @@ def facepage():
     # Use the Cloud Datastore client to fetch information from Datastore about
     # each photo.
     query = datastore_client.query(kind='Faces')
-    query.order = ['-created']
-	image_entities = list(query.fetch(limit=1))
+    # query.order = ['-created']
+    image_entities = list(query.fetch(limit=1))
 
     # Return a Jinja2 HTML template and pass in image_entities as a parameter.
     return render_template('facedetection.html', image_entities=image_entities)
@@ -79,8 +79,8 @@ def landpage():
     # Use the Cloud Datastore client to fetch information from Datastore about
     # each photo.
     query = datastore_client.query(kind='Lands')
-	query.order = ['-created']
-	land_entities = list(query.fetch(limit=1))
+    query.order = ['-created']
+    land_entities = list(query.fetch(limit=1))
 
     # Return a Jinja2 HTML template and pass in image_entities as a parameter.
     return render_template('landdetection.html', land_entities=land_entities)
@@ -186,9 +186,7 @@ def upload_photo_text():
     image = vision.types.Image(
         source=vision.types.ImageSource(gcs_image_uri=source_uri))
     texts = vision_client.text_detection(image=image)
-	
-	
-	text='\n'.join([d.description for d in texts.text_annotations])
+    text='\n'.join([d.description for d in texts.text_annotations])
     
 
     # Create a Cloud Datastore client.
@@ -250,9 +248,9 @@ def upload_photo_land():
     image = vision.types.Image(
         source=vision.types.ImageSource(gcs_image_uri=source_uri))
     lands = vision_client.landmark_detection(image=image)
-	for l in lands.landmark_annotations :
-    description=l.description
-	score=l.score
+    for l in lands.landmark_annotations:
+        description=l.description
+        score=l.score
 	
 	# Create a Cloud Datastore client.
     datastore_client = datastore.Client()
@@ -276,7 +274,7 @@ def upload_photo_land():
     entity['image_public_url'] = blob.public_url
     entity['timestamp'] = current_datetime
     entity['description'] = description
-	entity['score'] = score
+    entity['score'] = score
 	#entity['location'] = location
 
     # Save the new entity to Datastore.
