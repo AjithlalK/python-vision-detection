@@ -29,7 +29,7 @@
     </form>
 	
 		{% for land_entity in land_entities %}
-      <img src="{{text_entity['image_public_url']}}" width=200 height=200>
+      <img src="{{land_entity['image_public_url']}}" width=200 height=200>
       <p>{{land_entity['blob_name']}} was uploaded {{land_entity['timestamp']}}.</p>
       <p>Landmark detected detected: {{land_entity['land_description']}} ,score was {{land_entity['score']}}</p>
     {% endfor %}	
