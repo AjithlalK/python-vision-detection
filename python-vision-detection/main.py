@@ -43,7 +43,8 @@ def textpage():
     # Use the Cloud Datastore client to fetch information from Datastore about
     # each photo.
     query = datastore_client.query(kind='Texts')
-    text_entities = list(query.fetch())
+	query.order = ['-timestamp']
+    text_entities = list(query.fetch(limit=1))
 
     # Return a Jinja2 HTML template and pass in text_entities as a parameter.
     return render_template('textdetection.html', text_entities=text_entities)
@@ -248,9 +249,7 @@ def upload_photo_land():
     image = vision.types.Image(
         source=vision.types.ImageSource(gcs_image_uri=source_uri))
     lands = vision_client.landmark_detection(image=image)
-    for l in lands.landmark_annotations:
-        land_description=l.description
-        score=l.score
+   
 	
 	# Create a Cloud Datastore client.
     datastore_client = datastore.Client()
@@ -273,8 +272,9 @@ def upload_photo_land():
     entity['blob_name'] = blob.name
     entity['image_public_url'] = blob.public_url
     entity['timestamp'] = current_datetime
-    entity['land_description'] = land_description
-    entity['score'] = score
+	for l in lands.landmark_annotations:
+     entity['land_description'] = l.description
+     entity['score'] = score=l.score
 	#entity['location'] = location
 
     # Save the new entity to Datastore.
