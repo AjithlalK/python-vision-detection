@@ -271,8 +271,8 @@ def upload_photo_land():
     entity['blob_name'] = blob.name
     entity['image_public_url'] = blob.public_url
     entity['timestamp'] = current_datetime
-	for l in lands.landmark_annotations:
-	 entity['land_description'] = l.description
+    for l in lands.landmark_annotations:
+     entity['land_description'] = l.description
      entity['score'] = l.score
 	#entity['location'] = location
 
