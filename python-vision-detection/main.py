@@ -61,7 +61,7 @@ def facepage():
     # Use the Cloud Datastore client to fetch information from Datastore about
     # each photo.
     query = datastore_client.query(kind='Faces')
-    query.order = ['timestamp']
+    query.order = ['-timestamp']
     image_entities = list(query.fetch(limit=1))
 
     # Return a Jinja2 HTML template and pass in image_entities as a parameter.
@@ -273,7 +273,7 @@ def upload_photo_land():
     entity['blob_name'] = blob.name
     entity['image_public_url'] = blob.public_url
     entity['timestamp'] = current_datetime
-    entity['description'] = land_description
+    entity['land_description'] = land_description
     entity['score'] = score
 	#entity['location'] = location
 
