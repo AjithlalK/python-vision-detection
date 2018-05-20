@@ -1,7 +1,7 @@
 # Python  Vision Detection App for detecting Text/Face expression/Landmark using Google Cloud Vision API deployed in Google App Engine
 
 This  application allows a user to  perform text detection, landmark detection, and face expression detection 
-using Google Cloud Vision API.
+using Google Machine learning Vision API.
 
 ## It detects
 
